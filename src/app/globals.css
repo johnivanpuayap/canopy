@@ -1,0 +1,37 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme inline {
+  /* Brand Colors */
+  --color-primary: #15803D;
+  --color-primary-foreground: #FFFFFF;
+  --color-secondary: #6366F1;
+  --color-secondary-foreground: #FFFFFF;
+  --color-accent: #D97706;
+  --color-accent-foreground: #FFFFFF;
+  --color-background: #FAFBF6;
+  --color-foreground: #0F172A;
+  --color-muted: #F0F4ED;
+  --color-muted-foreground: #64748B;
+  --color-border: #E2EBE0;
+  --color-destructive: #DC2626;
+  --color-destructive-foreground: #FFFFFF;
+  --color-ring: #15803D;
+
+  /* Fonts */
+  --font-heading: var(--font-outfit), sans-serif;
+  --font-body: var(--font-work-sans), sans-serif;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-body);
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
