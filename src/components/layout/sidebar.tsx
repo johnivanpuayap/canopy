@@ -6,7 +6,9 @@ import { TreePine, Settings } from "lucide-react";
 import { NAV_ITEMS } from "@/lib/constants";
 import { MOCK_USER } from "@/lib/mock-data";
 import { Avatar } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { signOut } from "@/lib/actions/auth";
 
 function isActive(pathname: string, href: string): boolean {
   if (href === "/") return pathname === "/";
@@ -61,6 +63,13 @@ export function Sidebar(): React.ReactElement {
         </span>
         <Settings className="h-5 w-5 text-foreground/40" />
       </div>
+
+      {/* Sign out */}
+      <form action={signOut} className="border-t border-border p-3">
+        <Button variant="ghost" size="sm" className="w-full justify-start" type="submit">
+          Sign out
+        </Button>
+      </form>
     </aside>
   );
 }

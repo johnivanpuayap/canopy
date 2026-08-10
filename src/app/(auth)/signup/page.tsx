@@ -1,13 +1,27 @@
 "use client";
 
+import { useState, useTransition } from "react";
 import Link from "next/link";
 import { TreePine } from "lucide-react";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { APP_TAGLINE } from "@/lib/constants";
+import { signUp } from "@/lib/actions/auth";
 
 export default function SignupPage(): React.ReactElement {
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    startTransition(async () => {
+      const result = await signUp(formData);
+      if (result?.error) setError(result.error);
+    });
+  }
+
   return (
     <Card>
       <CardHeader className="flex flex-col items-center gap-2 pb-4 pt-6">
@@ -19,7 +33,7 @@ export default function SignupPage(): React.ReactElement {
       </CardHeader>
 
       <CardContent>
-        <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
+        <form onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div className="space-y-1">
               <label className="text-sm font-medium text-foreground" htmlFor="display-name">
@@ -27,6 +41,7 @@ export default function SignupPage(): React.ReactElement {
               </label>
               <Input
                 id="display-name"
+                name="displayName"
                 type="text"
                 placeholder="Your name"
               />
@@ -38,6 +53,7 @@ export default function SignupPage(): React.ReactElement {
               </label>
               <Input
                 id="email"
+                name="email"
                 type="email"
                 placeholder="you@example.com"
               />
@@ -49,6 +65,7 @@ export default function SignupPage(): React.ReactElement {
               </label>
               <Input
                 id="password"
+                name="password"
                 type="password"
                 placeholder="••••••••"
               />
@@ -60,12 +77,21 @@ export default function SignupPage(): React.ReactElement {
               </label>
               <Input
                 id="confirm-password"
+                name="confirmPassword"
                 type="password"
                 placeholder="••••••••"
               />
             </div>
 
-            <Button variant="primary" size="lg" className="w-full" type="submit">
+            {error && <p className="text-sm text-destructive">{error}</p>}
+
+            <Button
+              variant="primary"
+              size="lg"
+              className="w-full"
+              type="submit"
+              disabled={isPending}
+            >
               Create account
             </Button>
           </div>
