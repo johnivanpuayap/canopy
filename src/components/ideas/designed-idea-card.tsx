@@ -1,6 +1,6 @@
 "use client";
 
-import { useOptimistic, startTransition } from "react";
+import { useOptimistic, useState, startTransition } from "react";
 import { Pin, Quote, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,17 +14,31 @@ interface DesignedIdeaCardProps {
 
 export function DesignedIdeaCard({ idea }: DesignedIdeaCardProps): React.ReactElement {
   const [optimisticPinned, setOptimisticPinned] = useOptimistic(idea.isPinned);
+  const [pinFailed, setPinFailed] = useState(false);
+  const [deleteFailed, setDeleteFailed] = useState(false);
 
   function handleTogglePin(): void {
+    const next = !optimisticPinned;
     startTransition(async () => {
-      setOptimisticPinned(!optimisticPinned);
-      await togglePin(idea.id, !optimisticPinned);
+      setOptimisticPinned(next);
+      setPinFailed(false);
+      try {
+        await togglePin(idea.id, next);
+      } catch {
+        setOptimisticPinned(!next);
+        setPinFailed(true);
+      }
     });
   }
 
   function handleDelete(): void {
     startTransition(async () => {
-      await deleteIdea(idea.id);
+      setDeleteFailed(false);
+      try {
+        await deleteIdea(idea.id);
+      } catch {
+        setDeleteFailed(true);
+      }
     });
   }
 
@@ -41,8 +55,12 @@ export function DesignedIdeaCard({ idea }: DesignedIdeaCardProps): React.ReactEl
       <button
         type="button"
         onClick={handleDelete}
-        className="absolute top-3 right-3 cursor-pointer opacity-0 group-hover:opacity-60 hover:opacity-100 transition-opacity"
-        aria-label="Delete idea"
+        className={cn(
+          "absolute top-3 right-3 cursor-pointer transition-opacity",
+          deleteFailed ? "opacity-100" : "opacity-0 group-hover:opacity-60 hover:opacity-100",
+        )}
+        aria-label={deleteFailed ? "Delete failed — try again" : "Delete idea"}
+        title={deleteFailed ? "Delete failed — try again" : undefined}
       >
         <Trash2 className="h-4 w-4 text-destructive" />
       </button>
@@ -92,14 +110,27 @@ export function DesignedIdeaCard({ idea }: DesignedIdeaCardProps): React.ReactEl
             onClick={handleTogglePin}
             className={cn(
               "cursor-pointer transition-opacity",
-              optimisticPinned ? "opacity-100" : "opacity-0 group-hover:opacity-60 hover:opacity-100",
+              optimisticPinned || pinFailed
+                ? "opacity-100"
+                : "opacity-0 group-hover:opacity-60 hover:opacity-100",
             )}
-            aria-label={optimisticPinned ? "Unpin idea" : "Pin idea"}
+            aria-label={
+              pinFailed
+                ? "Pin update failed — try again"
+                : optimisticPinned
+                  ? "Unpin idea"
+                  : "Pin idea"
+            }
+            title={pinFailed ? "Pin update failed — try again" : undefined}
           >
             <Pin
               className={cn(
                 "h-4 w-4",
-                optimisticPinned ? "text-primary" : "text-foreground/50",
+                pinFailed
+                  ? "text-destructive"
+                  : optimisticPinned
+                    ? "text-primary"
+                    : "text-foreground/50",
               )}
             />
           </button>
