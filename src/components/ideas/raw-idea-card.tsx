@@ -1,10 +1,11 @@
 "use client";
 
 import { useOptimistic, startTransition } from "react";
-import { Pin } from "lucide-react";
+import { Pin, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { togglePin } from "@/lib/actions/ideas";
+import { togglePin, deleteIdea } from "@/lib/actions/ideas";
+import { cn } from "@/lib/utils";
 import type { Idea } from "@/types";
 
 function hashCode(str: string): number {
@@ -30,24 +31,46 @@ export function RawIdeaCard({ idea }: RawIdeaCardProps): React.ReactElement {
     });
   }
 
+  function handleDelete(): void {
+    startTransition(async () => {
+      await deleteIdea(idea.id);
+    });
+  }
+
   return (
     <div
-      className="rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer relative"
+      className="group rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer relative"
       style={{
         backgroundColor: idea.color,
         transform: `rotate(${(hashCode(idea.id) % 5) - 2}deg)`,
       }}
     >
-      {optimisticPinned && (
+      <div className="absolute top-2 right-2 flex items-center gap-1">
         <button
           type="button"
           onClick={handleTogglePin}
-          className="absolute top-2 right-2 cursor-pointer"
-          aria-label="Unpin idea"
+          className={cn(
+            "cursor-pointer transition-opacity",
+            optimisticPinned ? "opacity-100" : "opacity-0 group-hover:opacity-60 hover:opacity-100",
+          )}
+          aria-label={optimisticPinned ? "Unpin idea" : "Pin idea"}
         >
-          <Pin className="h-4 w-4 text-primary" />
+          <Pin
+            className={cn(
+              "h-4 w-4",
+              optimisticPinned ? "text-primary" : "text-foreground/50",
+            )}
+          />
         </button>
-      )}
+        <button
+          type="button"
+          onClick={handleDelete}
+          className="cursor-pointer opacity-0 group-hover:opacity-60 hover:opacity-100 transition-opacity"
+          aria-label="Delete idea"
+        >
+          <Trash2 className="h-4 w-4 text-destructive" />
+        </button>
+      </div>
       <h3 className="font-heading font-semibold text-foreground">{idea.title}</h3>
       {idea.notes && (
         <p className="text-sm text-foreground/70 mt-1 line-clamp-3">{idea.notes}</p>

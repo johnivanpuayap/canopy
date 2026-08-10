@@ -1,10 +1,11 @@
 "use client";
 
 import { useOptimistic, startTransition } from "react";
-import { Pin, Quote } from "lucide-react";
+import { Pin, Quote, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { togglePin } from "@/lib/actions/ideas";
+import { togglePin, deleteIdea } from "@/lib/actions/ideas";
+import { cn } from "@/lib/utils";
 import type { Idea } from "@/types";
 
 interface DesignedIdeaCardProps {
@@ -21,16 +22,30 @@ export function DesignedIdeaCard({ idea }: DesignedIdeaCardProps): React.ReactEl
     });
   }
 
+  function handleDelete(): void {
+    startTransition(async () => {
+      await deleteIdea(idea.id);
+    });
+  }
+
   if (!idea.brandPreview) return <></>;
 
   const { brandPreview } = idea;
 
   return (
-    <div className="rounded-xl border border-border bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+    <div className="group rounded-xl border border-border bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow relative">
       <div
         className="h-2"
         style={{ backgroundColor: brandPreview.palette[0]?.hex }}
       />
+      <button
+        type="button"
+        onClick={handleDelete}
+        className="absolute top-3 right-3 cursor-pointer opacity-0 group-hover:opacity-60 hover:opacity-100 transition-opacity"
+        aria-label="Delete idea"
+      >
+        <Trash2 className="h-4 w-4 text-destructive" />
+      </button>
       <div className="p-5">
         <h3
           className="font-heading text-lg font-bold"
@@ -72,16 +87,22 @@ export function DesignedIdeaCard({ idea }: DesignedIdeaCardProps): React.ReactEl
           <Button variant="primary" size="sm">
             Promote to Project
           </Button>
-          {optimisticPinned && (
-            <button
-              type="button"
-              onClick={handleTogglePin}
-              className="cursor-pointer"
-              aria-label="Unpin idea"
-            >
-              <Pin className="h-4 w-4 text-primary" />
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={handleTogglePin}
+            className={cn(
+              "cursor-pointer transition-opacity",
+              optimisticPinned ? "opacity-100" : "opacity-0 group-hover:opacity-60 hover:opacity-100",
+            )}
+            aria-label={optimisticPinned ? "Unpin idea" : "Pin idea"}
+          >
+            <Pin
+              className={cn(
+                "h-4 w-4",
+                optimisticPinned ? "text-primary" : "text-foreground/50",
+              )}
+            />
+          </button>
         </div>
       </div>
     </div>
