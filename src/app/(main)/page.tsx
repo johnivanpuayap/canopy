@@ -1,4 +1,5 @@
 import { getProjects, getAllMilestones, getAllTodos } from "@/lib/data/projects";
+import { getIdeas } from "@/lib/data/ideas";
 import { computeStats, deriveActivity } from "@/lib/derive";
 import { APP_TAGLINE } from "@/lib/constants";
 import { StatsCards } from "@/components/dashboard/stats-cards";
@@ -6,12 +7,13 @@ import { ProjectList } from "@/components/dashboard/project-list";
 import { ActivityFeed } from "@/components/dashboard/activity-feed";
 
 export default async function DashboardPage(): Promise<React.ReactElement> {
-  const [projects, milestones, todos] = await Promise.all([
+  const [projects, milestones, todos, ideas] = await Promise.all([
     getProjects(),
     getAllMilestones(),
     getAllTodos(),
+    getIdeas(),
   ]);
-  const stats = computeStats(projects, [], milestones);
+  const stats = computeStats(projects, ideas, milestones);
   const activity = deriveActivity(projects, milestones, todos);
 
   return (

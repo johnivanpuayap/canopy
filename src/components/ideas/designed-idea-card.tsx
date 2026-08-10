@@ -1,6 +1,10 @@
+"use client";
+
+import { useOptimistic, startTransition } from "react";
 import { Pin, Quote } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { togglePin } from "@/lib/actions/ideas";
 import type { Idea } from "@/types";
 
 interface DesignedIdeaCardProps {
@@ -8,6 +12,15 @@ interface DesignedIdeaCardProps {
 }
 
 export function DesignedIdeaCard({ idea }: DesignedIdeaCardProps): React.ReactElement {
+  const [optimisticPinned, setOptimisticPinned] = useOptimistic(idea.isPinned);
+
+  function handleTogglePin(): void {
+    startTransition(async () => {
+      setOptimisticPinned(!optimisticPinned);
+      await togglePin(idea.id, !optimisticPinned);
+    });
+  }
+
   if (!idea.brandPreview) return <></>;
 
   const { brandPreview } = idea;
@@ -59,7 +72,16 @@ export function DesignedIdeaCard({ idea }: DesignedIdeaCardProps): React.ReactEl
           <Button variant="primary" size="sm">
             Promote to Project
           </Button>
-          {idea.isPinned && <Pin className="h-4 w-4 text-primary" />}
+          {optimisticPinned && (
+            <button
+              type="button"
+              onClick={handleTogglePin}
+              className="cursor-pointer"
+              aria-label="Unpin idea"
+            >
+              <Pin className="h-4 w-4 text-primary" />
+            </button>
+          )}
         </div>
       </div>
     </div>

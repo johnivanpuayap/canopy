@@ -1,6 +1,10 @@
+"use client";
+
+import { useOptimistic, startTransition } from "react";
 import { Pin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { togglePin } from "@/lib/actions/ideas";
 import type { Idea } from "@/types";
 
 function hashCode(str: string): number {
@@ -17,6 +21,15 @@ interface RawIdeaCardProps {
 }
 
 export function RawIdeaCard({ idea }: RawIdeaCardProps): React.ReactElement {
+  const [optimisticPinned, setOptimisticPinned] = useOptimistic(idea.isPinned);
+
+  function handleTogglePin(): void {
+    startTransition(async () => {
+      setOptimisticPinned(!optimisticPinned);
+      await togglePin(idea.id, !optimisticPinned);
+    });
+  }
+
   return (
     <div
       className="rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer relative"
@@ -25,10 +38,15 @@ export function RawIdeaCard({ idea }: RawIdeaCardProps): React.ReactElement {
         transform: `rotate(${(hashCode(idea.id) % 5) - 2}deg)`,
       }}
     >
-      {idea.isPinned && (
-        <div className="absolute top-2 right-2">
+      {optimisticPinned && (
+        <button
+          type="button"
+          onClick={handleTogglePin}
+          className="absolute top-2 right-2 cursor-pointer"
+          aria-label="Unpin idea"
+        >
           <Pin className="h-4 w-4 text-primary" />
-        </div>
+        </button>
       )}
       <h3 className="font-heading font-semibold text-foreground">{idea.title}</h3>
       {idea.notes && (
