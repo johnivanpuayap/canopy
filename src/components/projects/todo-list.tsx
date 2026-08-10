@@ -24,13 +24,19 @@ const TAB_ITEMS = [
 export function TodoList({ projectId, todos, milestones }: TodoListProps): React.ReactElement {
   const [activeTab, setActiveTab] = useState("all");
   const [newTodoTitle, setNewTodoTitle] = useState("");
+  const [addError, setAddError] = useState(false);
 
   function handleAddTodo(): void {
     const title = newTodoTitle;
     if (!title.trim()) return;
-    setNewTodoTitle("");
     startTransition(async () => {
-      await createTodo(projectId, null, title);
+      try {
+        await createTodo(projectId, null, title);
+        setNewTodoTitle("");
+        setAddError(false);
+      } catch {
+        setAddError(true);
+      }
     });
   }
 
@@ -81,21 +87,31 @@ export function TodoList({ projectId, todos, milestones }: TodoListProps): React
           </div>
         )}
       </div>
-      <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border">
-        <Input
-          placeholder="Add a todo..."
-          value={newTodoTitle}
-          onChange={(e) => setNewTodoTitle(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              handleAddTodo();
-            }
-          }}
-        />
-        <Button variant="ghost" size="sm" onClick={handleAddTodo}>
-          <Plus className="h-4 w-4" />
-        </Button>
+      <div className="mt-4 pt-4 border-t border-border">
+        <div className="flex items-center gap-2">
+          <Input
+            placeholder="Add a todo..."
+            value={newTodoTitle}
+            onChange={(e) => {
+              setNewTodoTitle(e.target.value);
+              setAddError(false);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleAddTodo();
+              }
+            }}
+          />
+          <Button variant="ghost" size="sm" onClick={handleAddTodo}>
+            <Plus className="h-4 w-4" />
+          </Button>
+        </div>
+        {addError && (
+          <p className="text-sm text-destructive mt-1">
+            Couldn&apos;t add todo — try again.
+          </p>
+        )}
       </div>
     </div>
   );
