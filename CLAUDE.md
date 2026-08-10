@@ -54,14 +54,14 @@ src/
   lib/
     constants.ts    # App-wide constants
     utils.ts        # Utility functions
-    mock-data.ts    # Mock data for UI development
+    data/           # Server-side Supabase data-fetching helpers
   types/
     index.ts        # Shared TypeScript types/interfaces
 ```
 
 ### Naming Conventions
 
-- **Files:** kebab-case (`project-card.tsx`, `mock-data.ts`)
+- **Files:** kebab-case (`project-card.tsx`, `data/user.ts`)
 - **Components:** PascalCase (`ProjectCard`, `IdeaBoard`)
 - **Functions/variables:** camelCase (`getProjects`, `isLoading`)
 - **Types/Interfaces:** PascalCase (`Project`, `IdeaBoardProps`)
@@ -123,4 +123,4 @@ Schema lives in `supabase/migrations/` (profiles + signup trigger, projects/mile
 
 ## Current Phase
 
-**UI-first development** — building all screens with mock/static data. No Supabase integration yet (schema and local DB are ready; the UI still renders mock data). Focus on layout, components, responsiveness, and visual polish.
+**Supabase-backed development** — all views read from the local Supabase stack (`npm run db:start`). Mock data has been removed. Log in with the seeded dev user `dev@canopy.local` / `password123` (created by `supabase/seed.sql`). Next phase: Crucible integration layer (Edge Functions + upload endpoints).

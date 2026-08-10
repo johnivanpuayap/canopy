@@ -4,7 +4,10 @@ import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { SearchInput } from "@/components/ui/search-input";
 import { Avatar } from "@/components/ui/avatar";
-import { MOCK_USER } from "@/lib/mock-data";
+
+interface NavbarProps {
+  displayName: string;
+}
 
 function getPageTitle(pathname: string): string {
   if (pathname === "/") return "Dashboard";
@@ -14,7 +17,7 @@ function getPageTitle(pathname: string): string {
   return "Canopy";
 }
 
-export function Navbar(): React.ReactElement {
+export function Navbar({ displayName }: NavbarProps): React.ReactElement {
   const pathname = usePathname();
   const title = getPageTitle(pathname);
 
@@ -33,7 +36,7 @@ export function Navbar(): React.ReactElement {
       {/* Right: search + avatar */}
       <div className="ml-auto flex items-center gap-3">
         <SearchInput className="hidden w-64 md:block" />
-        <Avatar name={MOCK_USER.displayName} size="sm" />
+        <Avatar name={displayName} size="sm" />
       </div>
     </header>
   );
