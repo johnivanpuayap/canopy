@@ -33,7 +33,7 @@ export function ProjectContent({
         {activeTab === "todos" && (
           <TodoList projectId={projectId} todos={todos} milestones={milestones} />
         )}
-        {activeTab === "files" && <ProjectFiles files={files} />}
+        {activeTab === "files" && <ProjectFiles projectId={projectId} files={files} />}
       </div>
     </div>
   );

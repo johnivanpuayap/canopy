@@ -1,7 +1,10 @@
-import { MOCK_FILES, MOCK_PROJECTS } from "@/lib/mock-data";
+import { getFiles } from "@/lib/data/files";
+import { getProjects } from "@/lib/data/projects";
 import { FileBrowser } from "@/components/files/file-browser";
 
-export default function FilesPage(): React.ReactElement {
+export default async function FilesPage(): Promise<React.ReactElement> {
+  const [files, projects] = await Promise.all([getFiles(), getProjects()]);
+
   return (
     <div>
       <h1 className="font-heading text-2xl font-bold">File Vault</h1>
@@ -9,7 +12,7 @@ export default function FilesPage(): React.ReactElement {
         Browse and preview your project files
       </p>
       <div className="mt-6">
-        <FileBrowser files={MOCK_FILES} projects={MOCK_PROJECTS} />
+        <FileBrowser files={files} projects={projects} />
       </div>
     </div>
   );

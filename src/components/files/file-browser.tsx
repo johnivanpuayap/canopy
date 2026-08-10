@@ -62,7 +62,7 @@ export function FileBrowser({ files, projects }: FileBrowserProps): React.ReactE
         <Card>
           <MarkdownPreview
             fileName={selectedFile?.fileName ?? null}
-            content={selectedFile?.content ?? null}
+            storagePath={selectedFile?.storagePath ?? null}
           />
         </Card>
       </div>
