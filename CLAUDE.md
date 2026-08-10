@@ -108,6 +108,19 @@ src/
 - Lucide React only — no other icon libraries
 - Import individual icons, never the entire library
 
+## Local Database (Supabase + Docker)
+
+Development uses the Supabase CLI local stack (Docker required, same setup as the eligible repo):
+
+- `npm run db:start` — start the local stack (applies `supabase/migrations/`)
+- `npm run db:stop` — stop the containers
+- `npm run db:reset` — drop and re-apply all migrations
+- `npm run db:status` — show URLs and keys
+
+Ports are shifted to **55xxx** (API `55321`, DB `55322`, Studio `55323`, Mailpit `55324`) so this stack can run alongside eligible's default 54xxx stack. `.env.local` points at the local stack; the hosted Supabase values are kept commented out there.
+
+Schema lives in `supabase/migrations/` (profiles + signup trigger, projects/milestones/todos, ideas/files + `project-files` storage bucket). All tables have per-user RLS; grants go to `authenticated` and `service_role` only — `anon` intentionally has no table access.
+
 ## Current Phase
 
-**UI-first development** — building all screens with mock/static data. No Supabase integration yet. Focus on layout, components, responsiveness, and visual polish.
+**UI-first development** — building all screens with mock/static data. No Supabase integration yet (schema and local DB are ready; the UI still renders mock data). Focus on layout, components, responsiveness, and visual polish.
