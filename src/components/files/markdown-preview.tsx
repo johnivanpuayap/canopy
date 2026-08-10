@@ -21,17 +21,21 @@ export function MarkdownPreview({
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
+    let ignore = false;
     setContent(null);
     setError(null);
     if (!storagePath) return;
     startTransition(async () => {
       try {
         const text = await fetchFileContent(storagePath);
-        setContent(text);
+        if (!ignore) setContent(text);
       } catch {
-        setError("Couldn't load this file's contents.");
+        if (!ignore) setError("Couldn't load this file's contents.");
       }
     });
+    return () => {
+      ignore = true;
+    };
   }, [storagePath]);
 
   if (!fileName || !storagePath) {
