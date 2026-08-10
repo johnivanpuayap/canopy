@@ -7,7 +7,7 @@ export async function toggleTodo(id: string, isDone: boolean): Promise<void> {
   const supabase = await createServerSupabase();
   const { error } = await supabase.from("todos").update({ is_done: isDone }).eq("id", id);
   if (error) throw new Error(`toggleTodo: ${error.message}`);
-  revalidatePath("/dashboard", "layout");
+  revalidatePath("/", "layout");
 }
 
 export async function createTodo(
@@ -24,12 +24,12 @@ export async function createTodo(
     title: trimmed,
   });
   if (error) throw new Error(`createTodo: ${error.message}`);
-  revalidatePath("/dashboard", "layout");
+  revalidatePath("/", "layout");
 }
 
 export async function deleteTodo(id: string): Promise<void> {
   const supabase = await createServerSupabase();
   const { error } = await supabase.from("todos").delete().eq("id", id);
   if (error) throw new Error(`deleteTodo: ${error.message}`);
-  revalidatePath("/dashboard", "layout");
+  revalidatePath("/", "layout");
 }
