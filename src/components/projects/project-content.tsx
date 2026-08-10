@@ -7,6 +7,7 @@ import { ProjectFiles } from "@/components/projects/project-files";
 import type { Todo, Milestone, ProjectFile } from "@/types";
 
 interface ProjectContentProps {
+  projectId: string;
   todos: Todo[];
   milestones: Milestone[];
   files: ProjectFile[];
@@ -18,6 +19,7 @@ const TAB_ITEMS = [
 ];
 
 export function ProjectContent({
+  projectId,
   todos,
   milestones,
   files,
@@ -29,7 +31,7 @@ export function ProjectContent({
       <Tabs items={TAB_ITEMS} activeTab={activeTab} onTabChange={setActiveTab} />
       <div className="mt-6">
         {activeTab === "todos" && (
-          <TodoList todos={todos} milestones={milestones} />
+          <TodoList projectId={projectId} todos={todos} milestones={milestones} />
         )}
         {activeTab === "files" && <ProjectFiles files={files} />}
       </div>

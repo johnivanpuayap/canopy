@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, startTransition } from "react";
 import { Plus } from "lucide-react";
 import { Tabs } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TodoItem } from "@/components/projects/todo-item";
+import { createTodo } from "@/lib/actions/todos";
 import type { Todo, Milestone } from "@/types";
 
 interface TodoListProps {
+  projectId: string;
   todos: Todo[];
   milestones: Milestone[];
 }
@@ -19,8 +21,18 @@ const TAB_ITEMS = [
   { value: "ungrouped", label: "Ungrouped" },
 ];
 
-export function TodoList({ todos, milestones }: TodoListProps): React.ReactElement {
+export function TodoList({ projectId, todos, milestones }: TodoListProps): React.ReactElement {
   const [activeTab, setActiveTab] = useState("all");
+  const [newTodoTitle, setNewTodoTitle] = useState("");
+
+  function handleAddTodo(): void {
+    const title = newTodoTitle;
+    if (!title.trim()) return;
+    setNewTodoTitle("");
+    startTransition(async () => {
+      await createTodo(projectId, null, title);
+    });
+  }
 
   const ungroupedTodos = todos.filter((t) => t.milestoneId === null);
 
@@ -70,8 +82,18 @@ export function TodoList({ todos, milestones }: TodoListProps): React.ReactEleme
         )}
       </div>
       <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border">
-        <Input placeholder="Add a todo..." />
-        <Button variant="ghost" size="sm">
+        <Input
+          placeholder="Add a todo..."
+          value={newTodoTitle}
+          onChange={(e) => setNewTodoTitle(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              handleAddTodo();
+            }
+          }}
+        />
+        <Button variant="ghost" size="sm" onClick={handleAddTodo}>
           <Plus className="h-4 w-4" />
         </Button>
       </div>

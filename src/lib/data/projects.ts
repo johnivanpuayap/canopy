@@ -32,3 +32,30 @@ export async function getAllTodos(): Promise<Todo[]> {
   if (error) throw new Error(`getAllTodos: ${error.message}`);
   return (data as TodoRow[]).map(mapTodo);
 }
+
+export async function getProjectDetail(
+  id: string
+): Promise<{ project: Project; milestones: Milestone[]; todos: Todo[] } | null> {
+  const supabase = await createServerSupabase();
+  const { data: projectRow, error } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+  if (error) throw new Error(`getProjectDetail: ${error.message}`);
+  if (!projectRow) return null;
+
+  const [{ data: milestoneRows, error: mErr }, { data: todoRows, error: tErr }] =
+    await Promise.all([
+      supabase.from("milestones").select("*").eq("project_id", id).order("sort_order"),
+      supabase.from("todos").select("*").eq("project_id", id).order("sort_order"),
+    ]);
+  if (mErr) throw new Error(`getProjectDetail milestones: ${mErr.message}`);
+  if (tErr) throw new Error(`getProjectDetail todos: ${tErr.message}`);
+
+  return {
+    project: mapProject(projectRow as ProjectRow),
+    milestones: (milestoneRows as MilestoneRow[]).map(mapMilestone),
+    todos: (todoRows as TodoRow[]).map(mapTodo),
+  };
+}
