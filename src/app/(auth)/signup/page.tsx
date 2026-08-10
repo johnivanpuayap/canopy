@@ -16,6 +16,12 @@ export default function SignupPage(): React.ReactElement {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
+    const password = String(formData.get("password") ?? "");
+    const confirmPassword = String(formData.get("confirmPassword") ?? "");
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
     startTransition(async () => {
       const result = await signUp(formData);
       if (result?.error) setError(result.error);
