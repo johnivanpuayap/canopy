@@ -9,7 +9,7 @@
       .trunk { fill: #15803D; }
     </style>
   </defs>
-  <g id="icon" transform="translate(6 12)">
+  <g id="icon" transform="translate(8.75 12)">
     <path class="layer-back" d="M22 46 C10 44 6 32 14 24 C12 12 26 4 36 10 C44 2 58 6 60 16 C70 18 72 32 62 38 C64 48 52 54 44 48 C38 56 26 54 22 46 Z"/>
     <path class="layer-mid" d="M30 44 C22 42 20 32 27 27 C26 18 36 13 43 17 C49 12 59 16 59 24 C66 26 66 36 59 39 C60 46 51 50 46 45 C42 50 33 49 30 44 Z"/>
     <circle class="layer-top" cx="43" cy="31" r="9"/>

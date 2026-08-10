@@ -7,7 +7,7 @@
       .glow { fill: #A7D7B4; }
     </style>
   </defs>
-  <g id="icon" transform="translate(1.5 2) scale(0.34)">
+  <g id="icon" transform="translate(2.65 3.8) scale(0.34)">
     <path class="mark" d="M22 46 C10 44 6 32 14 24 C12 12 26 4 36 10 C44 2 58 6 60 16 C70 18 72 32 62 38 C64 48 52 54 44 48 C38 56 26 54 22 46 Z"/>
     <circle class="glow" cx="43" cy="31" r="9"/>
     <rect class="mark" x="39" y="50" width="8" height="16" rx="4"/>
