@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 72" role="img" aria-labelledby="logo-title logo-desc">
+  <title id="logo-title">Canopy Logo</title>
+  <desc id="logo-desc">A layered tree canopy in three shades of green beside the Canopy wordmark</desc>
+  <defs>
+    <style>
+      .layer-back { fill: #15803D; }
+      .layer-mid { fill: #4CAF6E; opacity: 0.9; }
+      .layer-top { fill: #A7D7B4; opacity: 0.9; }
+      .trunk { fill: #15803D; }
+      .text { fill: #0F172A; font-family: Outfit, 'Segoe UI', sans-serif; font-size: 30px; font-weight: 600; letter-spacing: -0.5px; }
+    </style>
+  </defs>
+  <g id="icon">
+    <path class="layer-back" d="M22 46 C10 44 6 32 14 24 C12 12 26 4 36 10 C44 2 58 6 60 16 C70 18 72 32 62 38 C64 48 52 54 44 48 C38 56 26 54 22 46 Z"/>
+    <path class="layer-mid" d="M30 44 C22 42 20 32 27 27 C26 18 36 13 43 17 C49 12 59 16 59 24 C66 26 66 36 59 39 C60 46 51 50 46 45 C42 50 33 49 30 44 Z"/>
+    <circle class="layer-top" cx="43" cy="31" r="9"/>
+    <rect class="trunk" x="39" y="50" width="8" height="16" rx="4"/>
+  </g>
+  <g id="wordmark">
+    <text class="text" x="86" y="47">Canopy</text>
+  </g>
+</svg>

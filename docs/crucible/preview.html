@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canopy — Crucible Design Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      /* Light Mode — replace hex values from design.md */
+      --primary: #15803D;
+      --primary-hover: #136934;
+      --on-primary: #FFFFFF;
+      --secondary: #6366F1;
+      --accent: #D97706;
+      --accent-hover: #B45309;
+      --background: #FAFBF6;
+      --foreground: #0F172A;
+      --surface: #FFFFFF;
+      --muted: #F0F4ED;
+      --muted-foreground: #5B6B60;
+      --border: #E2EBE0;
+      --destructive: #DC2626;
+      --ring: #15803D;
+      --radius: 14px;
+      --radius-sm: 8px;
+      --radius-lg: 20px;
+
+      /* Typography — replace with font names from design.md */
+      --font-heading: 'Outfit', system-ui, sans-serif;
+      --font-body: 'Work Sans', -apple-system, sans-serif;
+
+      /* Dark Mode — used in dark preview sections */
+      --dm-primary: #34A45C;
+      --dm-secondary: #8B8FF5;
+      --dm-accent: #E9940F;
+      --dm-background: #0C1A0F;
+      --dm-foreground: #E8EFE8;
+      --dm-surface: #102014;
+      --dm-muted: #122417;
+      --dm-muted-foreground: #9DB3A2;
+      --dm-border: #1E3826;
+      --dm-destructive: #EF6262;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--background);
+      color: var(--foreground);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== LAYOUT ===== */
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section {
+      padding: 72px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    section:last-child { border-bottom: none; }
+
+    /* ===== HERO ===== */
+    .hero {
+      /* Gradient: foreground -> primary -> primary lightened */
+      background: linear-gradient(155deg, var(--foreground) 0%, var(--primary) 55%, var(--dm-primary) 100%);
+      color: #fff;
+      padding: 56px 0 72px;
+      position: relative;
+      overflow: hidden;
+      border-bottom: none;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -60px;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(232,164,74,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      margin-bottom: 28px;
+      text-transform: uppercase;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .hero h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+
+    .hero .tagline {
+      font-size: 1.25rem;
+      opacity: 0.85;
+      font-weight: 400;
+      margin-bottom: 20px;
+    }
+
+    .hero .personality {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .hero .personality span {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+
+    /* ===== SECTION HEADING ===== */
+    .section-label {
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--foreground);
+      margin-bottom: 8px;
+    }
+
+    .section-desc {
+      color: var(--muted-foreground);
+      font-size: 0.95rem;
+      margin-bottom: 40px;
+      max-width: 560px;
+    }
+
+    /* ===== COLOR PALETTE ===== */
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .color-card {
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .color-swatch {
+      height: 72px;
+    }
+
+    .color-info {
+      padding: 10px 12px;
+    }
+
+    .color-info .name {
+      font-family: var(--font-heading);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--foreground);
+    }
+
+    .color-info .hex {
+      font-size: 0.75rem;
+      color: var(--muted-foreground);
+      font-family: 'SF Mono', 'Cascadia Code', monospace;
+    }
+
+    .mode-label {
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--foreground);
+    }
+
+    /* ===== TYPOGRAPHY ===== */
+    .type-specimen {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      margin-bottom: 24px;
+    }
+
+    .type-specimen h3 {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--foreground);
+    }
+
+    .type-specimen .font-name {
+      font-size: 0.8rem;
+      color: var(--muted-foreground);
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .type-sample {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--foreground);
+      margin-bottom: 12px;
+    }
+
+    .type-body {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--foreground);
+      max-width: 600px;
+    }
+
+    .type-body.muted {
+      color: var(--muted-foreground);
+      font-size: 0.9rem;
+    }
+
+    .font-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .font-detail {
+      font-size: 0.8rem;
+      color: var(--muted-foreground);
+    }
+
+    .font-detail strong {
+      color: var(--foreground);
+      display: block;
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 2px;
+    }
+
+    /* ===== LOGO SYSTEM ===== */
+    .logo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .logo-grid { grid-template-columns: 1fr; }
+    }
+
+    .logo-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo-card.primary {
+      grid-column: 1 / -1;
+      padding: 48px 32px;
+    }
+
+    .logo-card .label {
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+    }
+
+    .logo-card .sublabel {
+      font-size: 0.8rem;
+      color: var(--muted-foreground);
+      text-align: center;
+      max-width: 280px;
+    }
+
+    .logo-card svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .logo-card.primary svg {
+      max-height: 80px;
+    }
+
+    .app-icon-frame {
+      width: 80px;
+      height: 80px;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .app-icon-frame svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .favicon-sizes {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .favicon-size {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .favicon-size span {
+      font-size: 0.7rem;
+      color: var(--muted-foreground);
+      font-family: 'SF Mono', 'Cascadia Code', monospace;
+    }
+
+    .logo-dark-row {
+      grid-column: 1 / -1;
+      background: var(--dm-background);
+      border-color: var(--dm-border);
+    }
+
+    .logo-dark-row .label { color: var(--dm-primary); }
+    .logo-dark-row .sublabel { color: var(--dm-muted-foreground); }
+
+    /* ===== UI COMPONENTS ===== */
+    .components-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .components-grid { grid-template-columns: 1fr; }
+    }
+
+    .component-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+    }
+
+    .component-card h4 {
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted-foreground);
+      margin-bottom: 20px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: all 200ms ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--on-primary);
+    }
+
+    .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+
+    .btn-secondary {
+      background: var(--muted);
+      color: var(--foreground);
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--foreground);
+    }
+
+    .btn-destructive {
+      background: var(--destructive);
+      color: #fff;
+    }
+
+    .buttons-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /* Input */
+    .input-group { margin-bottom: 16px; }
+
+    .input-group label {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--foreground);
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      background: var(--surface);
+      color: var(--foreground);
+      outline: none;
+      transition: border-color 200ms ease, box-shadow 200ms ease;
+    }
+
+    .input-field:focus {
+      border-color: var(--ring);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 12%, transparent);
+    }
+
+    .input-field::placeholder { color: var(--muted-foreground); }
+
+    /* List item card — generic card for the project's main entity (habits, recipes, tasks, etc.) */
+    .item-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all 200ms ease;
+    }
+
+    .item-card:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      transform: translateY(-1px);
+    }
+
+    .item-check {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 200ms ease;
+      cursor: pointer;
+    }
+
+    .item-check.done {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .item-check.done::after {
+      content: '';
+      width: 10px;
+      height: 6px;
+      border-left: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: rotate(-45deg) translateY(-1px);
+    }
+
+    .item-info { flex: 1; }
+
+    .item-name {
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--foreground);
+    }
+
+    .item-meta {
+      font-size: 0.78rem;
+      color: var(--muted-foreground);
+    }
+
+    .item-meta strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Mini grid — for calendar/activity grid visualizations */
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      max-width: 220px;
+    }
+
+    .mini-grid-cell {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 4px;
+      background: var(--muted);
+    }
+
+    .mini-grid-cell.active { background: var(--primary); opacity: 0.8; }
+    .mini-grid-cell.active.current { opacity: 1; background: var(--primary); }
+    .mini-grid-cell.inactive { background: var(--muted); }
+    .mini-grid-cell.highlight { background: var(--accent); }
+
+    /* Stats row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    .stat {
+      text-align: center;
+      padding: 16px 8px;
+      background: var(--muted);
+      border-radius: var(--radius-sm);
+    }
+
+    .stat .value {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .stat .label {
+      font-size: 0.72rem;
+      color: var(--muted-foreground);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* ===== TECH STACK ===== */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .stack-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .stack-card .category {
+      font-family: var(--font-heading);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .stack-card .tech {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--foreground);
+      margin-bottom: 4px;
+    }
+
+    .stack-card .reason {
+      font-size: 0.82rem;
+      color: var(--muted-foreground);
+      line-height: 1.5;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      padding: 40px 0;
+      text-align: center;
+      color: var(--muted-foreground);
+      font-size: 0.82rem;
+    }
+
+    .footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    /* ===== DARK MODE PREVIEW ===== */
+    .dark-preview {
+      background: var(--dm-background);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-top: 24px;
+    }
+
+    .dark-preview .color-card { border-color: var(--dm-border); background: var(--dm-surface); }
+    .dark-preview .color-info .name { color: var(--dm-foreground); }
+    .dark-preview .color-info .hex { color: var(--dm-muted-foreground); }
+  </style>
+</head>
+<body>
+
+  <!-- =============================================
+       SECTION 1: HERO
+       Brand name, tagline, personality attributes
+       ============================================= -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">Crucible Design Preview</div>
+      <h1>Canopy</h1>
+      <p class="tagline">All your projects, one living view</p>
+      <div class="personality">
+        <span>Calm</span><span>Organized</span><span>Encouraging</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       SECTION 2: COLOR PALETTE
+       ============================================= -->
+  <section>
+    <div class="container">
+      <div class="section-label">Visual Identity</div>
+      <div class="section-title">Color Palette</div>
+      <p class="section-desc">Deep forest green grounds the brand, indigo carries secondary actions, and warm amber lights up CTAs — all on a light, green-tinted off-white.</p>
+
+      <div class="mode-label">Light Mode</div>
+      <div class="palette-grid">
+        <div class="color-card">
+          <div class="color-swatch" style="background:#15803D"></div>
+          <div class="color-info"><div class="name">Primary</div><div class="hex">#15803D</div></div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background:#6366F1"></div>
+          <div class="color-info"><div class="name">Secondary</div><div class="hex">#6366F1</div></div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background:#D97706"></div>
+          <div class="color-info"><div class="name">Accent</div><div class="hex">#D97706</div></div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background:#FAFBF6"></div>
+          <div class="color-info"><div class="name">Background</div><div class="hex">#FAFBF6</div></div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background:#0F172A"></div>
+          <div class="color-info"><div class="name">Foreground</div><div class="hex">#0F172A</div></div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background:#F0F4ED"></div>
+          <div class="color-info"><div class="name">Muted</div><div class="hex">#F0F4ED</div></div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background:#E2EBE0"></div>
+          <div class="color-info"><div class="name">Border</div><div class="hex">#E2EBE0</div></div>
+        </div>
+        <div class="color-card">
+          <div class="color-swatch" style="background:#DC2626"></div>
+          <div class="color-info"><div class="name">Destructive</div><div class="hex">#DC2626</div></div>
+        </div>
+      </div>
+
+      <div class="mode-label">Dark Mode</div>
+      <div class="dark-preview">
+        <div class="palette-grid" style="margin-bottom:0">
+          <div class="color-card">
+            <div class="color-swatch" style="background:#34A45C"></div>
+            <div class="color-info"><div class="name">Primary</div><div class="hex">#34A45C</div></div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background:#8B8FF5"></div>
+            <div class="color-info"><div class="name">Secondary</div><div class="hex">#8B8FF5</div></div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background:#E9940F"></div>
+            <div class="color-info"><div class="name">Accent</div><div class="hex">#E9940F</div></div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background:#0C1A0F"></div>
+            <div class="color-info"><div class="name">Background</div><div class="hex">#0C1A0F</div></div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background:#E8EFE8"></div>
+            <div class="color-info"><div class="name">Foreground</div><div class="hex">#E8EFE8</div></div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background:#122417"></div>
+            <div class="color-info"><div class="name">Muted</div><div class="hex">#122417</div></div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background:#1E3826"></div>
+            <div class="color-info"><div class="name">Border</div><div class="hex">#1E3826</div></div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background:#EF6262"></div>
+            <div class="color-info"><div class="name">Destructive</div><div class="hex">#EF6262</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       SECTION 3: TYPOGRAPHY
+       ============================================= -->
+  <section>
+    <div class="container">
+      <div class="section-label">Typography</div>
+      <div class="section-title">Font Pairing</div>
+      <p class="section-desc">Outfit's geometric headings set the modern, balanced tone; Work Sans keeps body copy warm and effortlessly readable.</p>
+
+      <div class="type-specimen">
+        <h3>Outfit</h3>
+        <div class="font-name">Headings &middot; Weights 400&ndash;700</div>
+        <div class="type-sample">All your projects, one living view</div>
+        <p class="type-body">Canopy is a command center for personal dev projects — track milestones and todos, store design docs and specs, and pin ideas to a mood-board-style idea board until they're ready to grow.</p>
+        <p class="type-body muted" style="margin-top:8px;">Work Sans carries body copy, form labels, and metadata — light, friendly, and legible at every size.</p>
+        <div class="font-details">
+          <div class="font-detail"><strong>Heading</strong>Outfit 600</div>
+          <div class="font-detail"><strong>Body</strong>Work Sans 400</div>
+          <div class="font-detail"><strong>Base Size</strong>16px / 1.6</div>
+          <div class="font-detail"><strong>Mood</strong>Geometric, modern, clean, balanced</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       SECTION 4: LOGO SYSTEM
+       ============================================= -->
+  <section>
+    <div class="container">
+      <div class="section-label">Brand Mark</div>
+      <div class="section-title">Logo System</div>
+      <p class="section-desc">Four variants optimized for different contexts — from hero placement to 16px favicons.</p>
+
+      <div class="logo-grid">
+        <!-- Row 1: Primary logo (full width) -->
+        <div class="logo-card primary">
+          <div class="label">Primary Logo</div>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 72" width="280" role="img" aria-label="Canopy primary logo">
+            <g>
+              <path fill="#15803D" d="M22 46 C10 44 6 32 14 24 C12 12 26 4 36 10 C44 2 58 6 60 16 C70 18 72 32 62 38 C64 48 52 54 44 48 C38 56 26 54 22 46 Z"/>
+              <path fill="#4CAF6E" opacity="0.9" d="M30 44 C22 42 20 32 27 27 C26 18 36 13 43 17 C49 12 59 16 59 24 C66 26 66 36 59 39 C60 46 51 50 46 45 C42 50 33 49 30 44 Z"/>
+              <circle fill="#A7D7B4" opacity="0.9" cx="43" cy="31" r="9"/>
+              <rect fill="#15803D" x="39" y="50" width="8" height="16" rx="4"/>
+            </g>
+            <text x="86" y="47" font-family="Outfit, sans-serif" font-size="30" font-weight="600" letter-spacing="-0.5" fill="#0F172A">Canopy</text>
+          </svg>
+          <div class="sublabel">Full brand mark for hero sections, about pages, and marketing materials</div>
+        </div>
+
+        <!-- Row 2a: App icon -->
+        <div class="logo-card">
+          <div class="label">App Icon</div>
+          <div class="app-icon-frame">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Canopy app icon">
+              <g transform="translate(6 12)">
+                <path fill="#15803D" d="M22 46 C10 44 6 32 14 24 C12 12 26 4 36 10 C44 2 58 6 60 16 C70 18 72 32 62 38 C64 48 52 54 44 48 C38 56 26 54 22 46 Z"/>
+                <path fill="#4CAF6E" opacity="0.9" d="M30 44 C22 42 20 32 27 27 C26 18 36 13 43 17 C49 12 59 16 59 24 C66 26 66 36 59 39 C60 46 51 50 46 45 C42 50 33 49 30 44 Z"/>
+                <circle fill="#A7D7B4" opacity="0.9" cx="43" cy="31" r="9"/>
+                <rect fill="#15803D" x="39" y="50" width="8" height="16" rx="4"/>
+              </g>
+            </svg>
+          </div>
+          <div class="sublabel">App stores, profile pictures, social media avatars</div>
+        </div>
+
+        <!-- Row 2b: Wordmark -->
+        <div class="logo-card">
+          <div class="label">Wordmark</div>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 44" width="180" role="img" aria-label="Canopy wordmark">
+            <text x="4" y="32" font-family="Outfit, sans-serif" font-size="30" font-weight="600" letter-spacing="0.25" fill="#0F172A">Canopy</text>
+          </svg>
+          <div class="sublabel">Headers, navigation bars, footers</div>
+        </div>
+
+        <!-- Row 3: Favicon at multiple sizes (full width) -->
+        <div class="logo-card" style="grid-column: 1 / -1;">
+          <div class="label">Favicon</div>
+          <div class="favicon-sizes">
+            <div class="favicon-size">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="16" height="16"><g transform="translate(1.5 2) scale(0.34)"><path fill="#15803D" d="M22 46 C10 44 6 32 14 24 C12 12 26 4 36 10 C44 2 58 6 60 16 C70 18 72 32 62 38 C64 48 52 54 44 48 C38 56 26 54 22 46 Z"/><circle fill="#A7D7B4" cx="43" cy="31" r="9"/><rect fill="#15803D" x="39" y="50" width="8" height="16" rx="4"/></g></svg>
+              <span>16px</span>
+            </div>
+            <div class="favicon-size">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32"><g transform="translate(1.5 2) scale(0.34)"><path fill="#15803D" d="M22 46 C10 44 6 32 14 24 C12 12 26 4 36 10 C44 2 58 6 60 16 C70 18 72 32 62 38 C64 48 52 54 44 48 C38 56 26 54 22 46 Z"/><circle fill="#A7D7B4" cx="43" cy="31" r="9"/><rect fill="#15803D" x="39" y="50" width="8" height="16" rx="4"/></g></svg>
+              <span>32px</span>
+            </div>
+            <div class="favicon-size">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="64" height="64"><g transform="translate(1.5 2) scale(0.34)"><path fill="#15803D" d="M22 46 C10 44 6 32 14 24 C12 12 26 4 36 10 C44 2 58 6 60 16 C70 18 72 32 62 38 C64 48 52 54 44 48 C38 56 26 54 22 46 Z"/><circle fill="#A7D7B4" cx="43" cy="31" r="9"/><rect fill="#15803D" x="39" y="50" width="8" height="16" rx="4"/></g></svg>
+              <span>64px</span>
+            </div>
+          </div>
+          <div class="sublabel">Browser tabs — simplified to a single bold shape with max 2 colors</div>
+        </div>
+
+        <!-- Row 4: Dark mode variants (full width, dark bg) -->
+        <div class="logo-card primary logo-dark-row">
+          <div class="label">Dark Mode Variants</div>
+          <div style="display:flex;align-items:center;gap:40px;flex-wrap:wrap;justify-content:center;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 72" width="280" role="img" aria-label="Canopy logo, monochrome light">
+              <g>
+                <path fill="#FFFFFF" d="M22 46 C10 44 6 32 14 24 C12 12 26 4 36 10 C44 2 58 6 60 16 C70 18 72 32 62 38 C64 48 52 54 44 48 C38 56 26 54 22 46 Z"/>
+                <rect fill="#FFFFFF" x="39" y="50" width="8" height="16" rx="4"/>
+              </g>
+              <text x="86" y="47" font-family="Outfit, sans-serif" font-size="30" font-weight="600" letter-spacing="-0.5" fill="#FFFFFF">Canopy</text>
+            </svg>
+            <div class="app-icon-frame" style="background:var(--dm-surface);">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Canopy app icon, monochrome light">
+                <g transform="translate(6 12)">
+                  <path fill="#FFFFFF" d="M22 46 C10 44 6 32 14 24 C12 12 26 4 36 10 C44 2 58 6 60 16 C70 18 72 32 62 38 C64 48 52 54 44 48 C38 56 26 54 22 46 Z"/>
+                  <rect fill="#FFFFFF" x="39" y="50" width="8" height="16" rx="4"/>
+                </g>
+              </svg>
+            </div>
+          </div>
+          <div class="sublabel">Primary logo and app icon adapted for dark backgrounds</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       SECTION 5: UI COMPONENTS
+       ============================================= -->
+  <section>
+    <div class="container">
+      <div class="section-label">UI Components</div>
+      <div class="section-title">Design System Preview</div>
+      <p class="section-desc">Flat surfaces, soft green-tinted cards, and 150&ndash;200ms transitions — quiet components that let the work take center stage.</p>
+
+      <div class="components-grid">
+        <!-- Card 1: Item list (full width) -->
+        <div class="component-card" style="grid-column: 1 / -1;">
+          <h4>Project Todos</h4>
+          <div class="items-list">
+            <div class="item-card">
+              <div class="item-check done"></div>
+              <div class="item-info">
+                <div class="item-name">Wire idea board to Supabase</div>
+                <div class="item-meta">Canopy &middot; milestone: <strong>Supabase integration</strong></div>
+              </div>
+            </div>
+            <div class="item-card">
+              <div class="item-check done"></div>
+              <div class="item-info">
+                <div class="item-name">Add file vault upload and preview</div>
+                <div class="item-meta">Canopy &middot; milestone: <strong>Supabase integration</strong></div>
+              </div>
+            </div>
+            <div class="item-card">
+              <div class="item-check"></div>
+              <div class="item-info">
+                <div class="item-name">Build /api/upload Edge Function</div>
+                <div class="item-meta">Canopy &middot; milestone: <strong>Crucible integration</strong></div>
+              </div>
+            </div>
+            <div class="item-card">
+              <div class="item-check"></div>
+              <div class="item-info">
+                <div class="item-name">Ship public landing page</div>
+                <div class="item-meta">Canopy &middot; milestone: <strong>Launch</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Stats (half width) -->
+        <div class="component-card">
+          <h4>Dashboard Stats</h4>
+          <div class="stats-row">
+            <div class="stat">
+              <div class="value">4</div>
+              <div class="label">Projects</div>
+            </div>
+            <div class="stat">
+              <div class="value">12</div>
+              <div class="label">Ideas</div>
+            </div>
+            <div class="stat">
+              <div class="value">68%</div>
+              <div class="label">Done</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Activity grid (half width) -->
+        <div class="component-card">
+          <h4>Activity</h4>
+          <div class="mini-grid">
+            <div class="mini-grid-cell active"></div>
+            <div class="mini-grid-cell active"></div>
+            <div class="mini-grid-cell inactive"></div>
+            <div class="mini-grid-cell active"></div>
+            <div class="mini-grid-cell highlight"></div>
+            <div class="mini-grid-cell active"></div>
+            <div class="mini-grid-cell inactive"></div>
+            <div class="mini-grid-cell inactive"></div>
+            <div class="mini-grid-cell active"></div>
+            <div class="mini-grid-cell active"></div>
+            <div class="mini-grid-cell active"></div>
+            <div class="mini-grid-cell inactive"></div>
+            <div class="mini-grid-cell active"></div>
+            <div class="mini-grid-cell active"></div>
+            <div class="mini-grid-cell highlight"></div>
+            <div class="mini-grid-cell active"></div>
+            <div class="mini-grid-cell inactive"></div>
+            <div class="mini-grid-cell active"></div>
+            <div class="mini-grid-cell active"></div>
+            <div class="mini-grid-cell inactive"></div>
+            <div class="mini-grid-cell active"></div>
+            <div class="mini-grid-cell active"></div>
+            <div class="mini-grid-cell active"></div>
+            <div class="mini-grid-cell inactive"></div>
+            <div class="mini-grid-cell active"></div>
+            <div class="mini-grid-cell active"></div>
+            <div class="mini-grid-cell active current"></div>
+            <div class="mini-grid-cell inactive"></div>
+          </div>
+          <div style="margin-top:12px;font-size:0.78rem;color:var(--muted-foreground);">Commits and updates across projects, last 4 weeks</div>
+        </div>
+
+        <!-- Card 4: Buttons (half width) -->
+        <div class="component-card">
+          <h4>Buttons</h4>
+          <div class="buttons-row">
+            <button class="btn btn-primary">New Project</button>
+            <button class="btn btn-secondary">View Files</button>
+            <button class="btn btn-accent">Design with Crucible</button>
+            <button class="btn btn-outline">Cancel</button>
+            <button class="btn btn-destructive">Delete</button>
+          </div>
+        </div>
+
+        <!-- Card 5: Form inputs (half width) -->
+        <div class="component-card">
+          <h4>Form Input</h4>
+          <div class="input-group">
+            <label>Idea Title</label>
+            <input type="text" class="input-field" placeholder="A CLI that names your branches for you…">
+          </div>
+          <div class="input-group" style="margin-bottom:0;">
+            <label>Notes</label>
+            <input type="text" class="input-field" placeholder="Optional — why is this worth building?">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       SECTION 6: TECH STACK
+       ============================================= -->
+  <section>
+    <div class="container">
+      <div class="section-label">Engineering</div>
+      <div class="section-title">Tech Stack</div>
+      <p class="section-desc">Free-tier friendly, zero-ops, and fast to build on — everything a personal project tracker needs and nothing it doesn't.</p>
+
+      <div class="stack-grid">
+        <div class="stack-card">
+          <div class="category">Frontend</div>
+          <div class="tech">Next.js + Tailwind CSS</div>
+          <div class="reason">App Router with SSR, file-based routing, and token-driven utility styling.</div>
+        </div>
+        <div class="stack-card">
+          <div class="category">Backend</div>
+          <div class="tech">Supabase</div>
+          <div class="reason">Auth, Postgres with per-user RLS, Realtime, Storage, and Edge Functions in one free tier.</div>
+        </div>
+        <div class="stack-card">
+          <div class="category">Hosting</div>
+          <div class="tech">Vercel</div>
+          <div class="reason">Zero-config Next.js deploys; hobby plan covers personal use comfortably.</div>
+        </div>
+        <div class="stack-card">
+          <div class="category">Icons</div>
+          <div class="tech">Lucide React</div>
+          <div class="reason">Consistent stroke style, tree-shakeable individual imports.</div>
+        </div>
+        <div class="stack-card">
+          <div class="category">Fonts</div>
+          <div class="tech">next/font/google</div>
+          <div class="reason">Outfit and Work Sans loaded without layout shift.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <div class="footer">
+    <div class="container">
+      Generated by <a href="#">Crucible</a> &middot; Design preview for Canopy
+    </div>
+  </div>
+
+</body>
+</html>

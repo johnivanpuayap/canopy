@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 44" role="img" aria-labelledby="wm-title wm-desc">
+  <title id="wm-title">Canopy Wordmark</title>
+  <desc id="wm-desc">The word Canopy set in Outfit semibold</desc>
+  <defs>
+    <style>
+      .text { fill: #0F172A; font-family: Outfit, 'Segoe UI', sans-serif; font-size: 30px; font-weight: 600; letter-spacing: 0.25px; }
+    </style>
+  </defs>
+  <g id="wordmark">
+    <text class="text" x="4" y="32">Canopy</text>
+  </g>
+</svg>

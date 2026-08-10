@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 72" role="img" aria-labelledby="logo-ml-title logo-ml-desc">
+  <title id="logo-ml-title">Canopy Logo (Monochrome Light)</title>
+  <desc id="logo-ml-desc">Single white tree canopy silhouette beside the Canopy wordmark, for dark backgrounds</desc>
+  <defs>
+    <style>
+      .mono { fill: #FFFFFF; }
+      .text { fill: #FFFFFF; font-family: Outfit, 'Segoe UI', sans-serif; font-size: 30px; font-weight: 600; letter-spacing: -0.5px; }
+    </style>
+  </defs>
+  <g id="icon">
+    <path class="mono" d="M22 46 C10 44 6 32 14 24 C12 12 26 4 36 10 C44 2 58 6 60 16 C70 18 72 32 62 38 C64 48 52 54 44 48 C38 56 26 54 22 46 Z"/>
+    <rect class="mono" x="39" y="50" width="8" height="16" rx="4"/>
+  </g>
+  <g id="wordmark">
+    <text class="text" x="86" y="47">Canopy</text>
+  </g>
+</svg>

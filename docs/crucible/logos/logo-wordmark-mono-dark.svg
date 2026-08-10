@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 44" role="img" aria-labelledby="wm-md-title wm-md-desc">
+  <title id="wm-md-title">Canopy Wordmark (Monochrome Dark)</title>
+  <desc id="wm-md-desc">The word Canopy in a single dark color</desc>
+  <defs>
+    <style>
+      .text { fill: #1F2937; font-family: Outfit, 'Segoe UI', sans-serif; font-size: 30px; font-weight: 600; letter-spacing: 0.25px; }
+    </style>
+  </defs>
+  <g id="wordmark">
+    <text class="text" x="4" y="32">Canopy</text>
+  </g>
+</svg>
