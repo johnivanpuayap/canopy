@@ -10,7 +10,7 @@ interface NavbarProps {
 }
 
 function getPageTitle(pathname: string): string {
-  if (pathname === "/") return "Dashboard";
+  if (pathname === "/dashboard") return "Dashboard";
   if (pathname === "/ideas") return "Idea Board";
   if (pathname === "/files") return "File Vault";
   if (pathname.startsWith("/project")) return "Project";

@@ -11,7 +11,7 @@ export async function signIn(formData: FormData): Promise<{ error: string } | vo
   if (error) {
     return { error: error.message };
   }
-  redirect("/");
+  redirect("/dashboard");
 }
 
 export async function signUp(formData: FormData): Promise<{ error: string } | void> {
@@ -27,7 +27,7 @@ export async function signUp(formData: FormData): Promise<{ error: string } | vo
   if (error) {
     return { error: error.message };
   }
-  redirect("/");
+  redirect("/dashboard");
 }
 
 export async function signOut(): Promise<void> {

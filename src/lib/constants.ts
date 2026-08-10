@@ -13,7 +13,7 @@ export const APP_NAME = "Canopy";
 export const APP_TAGLINE = "All your projects, one living view.";
 
 export const NAV_ITEMS = [
-  { label: "Dashboard", href: "/", icon: LayoutDashboard },
+  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Ideas", href: "/ideas", icon: Lightbulb },
   { label: "Files", href: "/files", icon: FolderOpen },
 ] as const;

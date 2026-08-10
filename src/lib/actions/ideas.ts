@@ -21,7 +21,7 @@ export async function createIdea(title: string, notes: string | null): Promise<v
   });
   if (error) throw new Error(`createIdea: ${error.message}`);
   revalidatePath("/ideas");
-  revalidatePath("/");
+  revalidatePath("/dashboard");
 }
 
 export async function togglePin(id: string, isPinned: boolean): Promise<void> {
@@ -36,5 +36,5 @@ export async function deleteIdea(id: string): Promise<void> {
   const { error } = await supabase.from("ideas").delete().eq("id", id);
   if (error) throw new Error(`deleteIdea: ${error.message}`);
   revalidatePath("/ideas");
-  revalidatePath("/");
+  revalidatePath("/dashboard");
 }

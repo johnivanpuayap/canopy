@@ -34,15 +34,16 @@ export default async function middleware(request: NextRequest): Promise<NextResp
   const isAuthPath = AUTH_PATHS.some((p) =>
     request.nextUrl.pathname.startsWith(p)
   );
+  const isRoot = request.nextUrl.pathname === "/";
 
-  if (!user && !isAuthPath) {
+  if (!user && !isAuthPath && !isRoot) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
-  if (user && isAuthPath) {
+  if (user && (isAuthPath || isRoot)) {
     const url = request.nextUrl.clone();
-    url.pathname = "/";
+    url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
 
